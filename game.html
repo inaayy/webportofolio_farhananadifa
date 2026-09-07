@@ -1,0 +1,200 @@
+ html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Game Tangkap Bintang ⭐</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #581444, #a82c89);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 20px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        #gameArea {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            background: linear-gradient(#191047, #2d155c);
+            border: 3px solid #f180d5;
+            border-radius: 0 0 15px 15px;
+        }
+
+        #star {
+            position: absolute;
+            display: none;
+            font-size: 45px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+
+        #star:hover {
+            transform: scale(1.2);
+        }
+
+        #startButton {
+            margin-top: 20px;
+            padding: 13px 30px;
+            border: none;
+            border-radius: 10px;
+            background: #38bdf8;
+            color: #111827;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #startButton:hover {
+            background: #7dd3fc;
+            transform: translateY(-2px);
+        }
+
+        #message {
+            margin-top: 15px;
+            min-height: 25px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-container">
+
+        <h1>⭐ Tangkap Bintang!</h1>
+        <p>Tangkap bintang sebanyak mungkin sebelum waktu habis.</p>
+
+        <div class="info">
+            <div>⭐ Skor: <span id="score">0</span></div>
+            <div>⏰ Waktu: <span id="time">30</span></div>
+        </div>
+
+        <div id="gameArea">
+            <div id="star">⭐</div>
+        </div>
+
+        <button id="startButton">Mulai Game</button>
+
+        <p id="message"></p>
+
+    </div>
+
+
+    <script>
+        const gameArea = document.getElementById("gameArea");
+        const star = document.getElementById("star");
+        const scoreText = document.getElementById("score");
+        const timeText = document.getElementById("time");
+        const startButton = document.getElementById("startButton");
+        const message = document.getElementById("message");
+
+        let score = 0;
+        let time = 30;
+        let gameRunning = false;
+        let timer;
+
+        // Memindahkan bintang ke tempat acak
+        function moveStar() {
+
+            const maxX = gameArea.clientWidth - star.offsetWidth;
+            const maxY = gameArea.clientHeight - star.offsetHeight;
+
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            star.style.left = randomX + "px";
+            star.style.top = randomY + "px";
+        }
+
+        // Ketika bintang diklik
+        star.addEventListener("click", function() {
+
+            if (!gameRunning) return;
+
+            score++;
+            scoreText.textContent = score;
+
+            moveStar();
+        });
+
+        // Memulai game
+        startButton.addEventListener("click", function() {
+
+            if (gameRunning) return;
+
+            score = 0;
+            time = 30;
+            gameRunning = true;
+
+            scoreText.textContent = score;
+            timeText.textContent = time;
+
+            message.textContent = "Ayo tangkap bintangnya! ⭐";
+
+            star.style.display = "block";
+            startButton.textContent = "Game Berjalan...";
+
+            moveStar();
+
+            timer = setInterval(function() {
+
+                time--;
+                timeText.textContent = time;
+
+                if (time <= 0) {
+                    endGame();
+                }
+
+            }, 1000);
+        });
+
+        // Mengakhiri game
+        function endGame() {
+
+            clearInterval(timer);
+
+            gameRunning = false;
+
+            star.style.display = "none";
+
+            startButton.textContent = "Main Lagi";
+
+            message.textContent =
+                "🎉 Game selesai! Skor kamu: " + score;
+        }
+    </script>
+
+</body>
+</html>
